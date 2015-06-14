@@ -7,7 +7,7 @@ const { Observable } = Rx
 
 const Fluxium = {
 	Immutable,
-	Observable,
+	Rx,
 	create({ actionCreators, stores, handleActionError }) {
 		invariant(
 			handleActionError === undefined || typeof handleActionError === 'function',
