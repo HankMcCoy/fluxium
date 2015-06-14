@@ -1,10 +1,13 @@
 import invariant from 'invariant'
 import _ from 'lodash'
 import { Reactor, Store, Immutable } from 'nuclear-js'
-import { Observable } from 'rx'
+import Rx from 'rx'
+
+const { Observable } = Rx
 
 const Fluxium = {
 	Immutable,
+	Observable,
 	create({ actionCreators, stores, handleActionError }) {
 		invariant(
 			handleActionError === undefined || typeof handleActionError === 'function',
