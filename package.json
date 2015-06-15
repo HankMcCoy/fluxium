@@ -1,6 +1,6 @@
 {
   "name": "fluxium",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. Action creators do not directly dispatch actions, but instead return observable streams of actions.",
   "main": "lib/fluxium.js",
   "repository": {
