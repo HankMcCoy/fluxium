@@ -2,6 +2,7 @@ import invariant from 'invariant'
 import _ from 'lodash'
 import { Reactor, Store, Immutable } from 'nuclear-js'
 import Rx from 'rx'
+import util from './util'
 
 const { Observable } = Rx
 
@@ -68,13 +69,7 @@ const Fluxium = {
 				log(...[`Action creator called: ${name}.`]
 					.concat(payload ? ['Payload:', payload] : []))
 
-				var result = actionCreator(payload)
-
-				if (typeof _.get(result, 'subscribe') !== 'function') {
-					result = typeof _.get(result, 'then') === 'function'
-						? Observable.fromPromise(result)
-						: Observable.just(result)
-				}
+				var result = util.makeObservable(actionCreator(payload))
 
 				result.subscribe(
 					action => {
