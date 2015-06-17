@@ -2,7 +2,6 @@ import invariant from 'invariant'
 import _ from 'lodash'
 import { Reactor, Store, Immutable } from 'nuclear-js'
 import Rx from 'rx'
-import util from './util'
 
 const { Observable } = Rx
 
@@ -69,7 +68,13 @@ const Fluxium = {
 				log(...[`Action creator called: ${name}.`]
 					.concat(payload ? ['Payload:', payload] : []))
 
-				var result = util.makeObservable(actionCreator(payload))
+				var result = actionCreator(payload)
+
+				invariant(
+					typeof result.subscribe === 'function',
+					'Actions creators must return Rx.Observables. You returned: $s',
+					result
+				)
 
 				result.subscribe(
 					action => {
