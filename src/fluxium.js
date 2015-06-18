@@ -9,25 +9,25 @@ const { Observable } = Rx
 const Fluxium = {
 	Immutable,
 	Rx,
-	create({ actionCreators, stores, handleActionError }) {
+	create({ intents, stores, handleError }) {
 		invariant(
 			handleError === undefined || typeof handleError === 'function',
 			ignoreNewlines `The 'handleError' attribute must be either undefined or a
 				function. You provided: %s.`,
-			handleActionError
+			handleError
 		)
 
 		invariant(
-			_.isPlainObject(actionCreators),
+			_.isPlainObject(intents),
 			ignoreNewlines `The 'intents' attribute must be a plain JS object. You
 				provided: %s.`,
-			actionCreators
+			intents
 		)
 
 		const reactor = new Reactor()
 
-		function mapActionCreators(actionCreatorGroup) {
-			return _.mapValues(actionCreatorGroup, (value, key) => {
+		function mapIntents(intentGroup) {
+			return _.mapValues(intentGroup, (value, key) => {
 				invariant(
 					typeof value === 'function' || _.isPlainObject(value),
 					ignoreNewlines `Children of the 'intents' attribute must be either a
@@ -38,10 +38,10 @@ const Fluxium = {
 				)
 
 				if (typeof value === 'function') {
-					return wrapActionCreator(value, key)
+					return wrapIntent(value, key)
 				}
 				else if (_.isPlainObject(value)) {
-					return mapActionCreators(value)
+					return mapIntents(value)
 				}
 			})
 		}
@@ -64,16 +64,16 @@ const Fluxium = {
 			reactor.dispatch(actionType, payload)
 		}
 
-		function wrapActionCreator(actionCreator, name) {
+		function wrapIntent(intent, name) {
 			return function getAndDispatchActions(payload) {
-				log(...[`Action creator called: ${name}.`]
+				log(...[`Intent called: ${name}.`]
 					.concat(payload ? ['Payload:', payload] : []))
 
-				var result = actionCreator(payload)
+				var result = intent(payload)
 
 				invariant(
 					typeof result.subscribe === 'function',
-					'Actions creators must return Rx.Observables. You returned: $s',
+					'Intents must return Rx.Observables of actions. You returned: $s',
 					result
 				)
 
@@ -103,7 +103,7 @@ const Fluxium = {
 						dispatch(action.type, action.payload)
 					},
 					error => {
-						var errorEvent = handleActionError(error)
+						var errorEvent = handleError(error)
 
 						if (errorEvent) {
 							dispatch(errorEvent.type, errorEvent.payload)
@@ -117,7 +117,7 @@ const Fluxium = {
 
 		return {
 			mixin: reactor.ReactMixin,
-			actions: mapActionCreators(actionCreators)
+			intents: mapIntents(intents)
 		}
 	}
 }
