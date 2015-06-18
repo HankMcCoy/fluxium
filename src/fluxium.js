@@ -2,6 +2,7 @@ import invariant from 'invariant'
 import _ from 'lodash'
 import { Reactor, Store, Immutable } from 'nuclear-js'
 import Rx from 'rx'
+import ignoreNewlines from 'ignore-newlines'
 
 const { Observable } = Rx
 
@@ -10,16 +11,16 @@ const Fluxium = {
 	Rx,
 	create({ actionCreators, stores, handleActionError }) {
 		invariant(
-			handleActionError === undefined || typeof handleActionError === 'function',
-			'The `handleActionError` attribute must be either undefined or a ' +
-				'function. You provided: %s.',
+			handleError === undefined || typeof handleError === 'function',
+			ignoreNewlines `The 'handleError' attribute must be either undefined or a
+				function. You provided: %s.`,
 			handleActionError
 		)
 
 		invariant(
 			_.isPlainObject(actionCreators),
-			'The `actionCreators` attribute must be a plain JS object. You ' +
-				'provided: %s.',
+			ignoreNewlines `The 'intents' attribute must be a plain JS object. You
+				provided: %s.`,
 			actionCreators
 		)
 
@@ -29,9 +30,9 @@ const Fluxium = {
 			return _.mapValues(actionCreatorGroup, (value, key) => {
 				invariant(
 					typeof value === 'function' || _.isPlainObject(value),
-					'Children of the `actionCreators` attribute must be either a ' +
-						'function or a plain JS object. You provided a child at %s with a ' +
-						'type of %s',
+					ignoreNewlines `Children of the 'intents' attribute must be either a
+						function or a plain JS object. You provided a child at %s with a
+						type of %s`,
 					value,
 					typeof value
 				)
@@ -81,8 +82,8 @@ const Fluxium = {
 						invariant(
 							_.every(Object.keys(action), key =>
 								_.includes(['type', 'payload'], key)),
-							'The only valid attributes on an action are `type` and ' +
-								'`payload`. You provided: %s.',
+							ignoreNewlines `The only valid attributes on an action are 'type'
+								and 'payload'. You provided: %s.`,
 							JSON.stringify(Object.keys(action))
 						)
 
@@ -94,8 +95,8 @@ const Fluxium = {
 
 						invariant(
 							action.payload === undefined || _.isPlainObject(action.payload),
-							'Action payloads must be undefined or plain JS objects. ' +
-								'You provided: %s.',
+							ignoreNewlines `Action payloads must be undefined or plain JS
+								objects. You provided: %s.`,
 							action.payload
 						)
 
@@ -139,8 +140,8 @@ function createStore(store) {
 
 	invariant(
 		_.isEqual(Object.keys(store), ['initialState', 'handlers']),
-		'The `stores` attribute requires exactly two attributes: initialState ' +
-			'and handlers. You provided: %s.',
+		ignoreNewlines `The 'stores' attribute requires exactly two attributes:
+			'initialState' and 'handlers'. You provided: %s.`,
 		Object.keys(store)
 	)
 
@@ -152,8 +153,8 @@ function createStore(store) {
 	invariant(
 		_.isPlainObject(store.handlers) &&
 			_.every(store.handlers, handler => typeof handler === 'function'),
-		'Each store\'s `handlers` attribute must be a plain JS object mapping ' +
-			'action type strings to functions.'
+		ignoreNewlines `Each store\'s 'handlers' attribute must be a plain JS
+			object mapping action type strings to functions.`
 	)
 
 	return new Store({
