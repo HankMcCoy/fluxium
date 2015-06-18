@@ -2,7 +2,7 @@ Fluxium
 =======
 
 Summary
------------
+-------
 
 A small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. Action creators do not directly dispatch actions, but instead return observable streams of actions.
 
@@ -15,19 +15,20 @@ Here is a deliberately simplistic example, showing how to use Fluxium.
 var fluxium = require('fluxium');
 var React = require('react');
 var Immutable = fluxium.Immutable;
+var Observable = fluxium.Rx.Observable;
 
 var flux = fluxium.create({
-	actionCreators: {
+	intents: {
 		showAlert: function(message) {
-			return {
+			return Observable.just({
 				type: 'SHOW_ALERT',
 				payload: { message: message }
-			}
+			})
 		},
 		dismissAlert: function () {
-			return {
+			return Observable.just({
 				type: 'DISMISS_ALERT'
-			}
+			})
 		}
 	},
 	stores: {
@@ -45,7 +46,7 @@ var flux = fluxium.create({
 			}
 		}
 	},
-	handleActionError: function (error) {
+	handleError: function (error) {
 		console.error(JSON.stringify(error))
 	}
 });
@@ -73,7 +74,7 @@ var Alert = React.createClass({
 		}
 	},
 	dismissAlert: function () {
-		flux.actions.dismissAlert()
+		flux.intents.dismissAlert()
 	}
 })
 ```
