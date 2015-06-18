@@ -4,7 +4,7 @@ Fluxium
 Summary
 -------
 
-A small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. Action creators do not directly dispatch actions, but instead return observable streams of actions.
+A small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. The action creators of Flux, which traditionally dispatch actions via a central dispatch method, are replaced with intents which return observable streams of actions which Fluxium takes care of dispatching.
 
 Example
 -------
