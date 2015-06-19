@@ -117,7 +117,8 @@ const Fluxium = {
 
 		return {
 			mixin: reactor.ReactMixin,
-			intents: mapIntents(intents)
+			intents: mapIntents(intents),
+			observe: reactor.observe.bind(reactor)
 		}
 	}
 }
