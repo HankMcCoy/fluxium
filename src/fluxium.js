@@ -58,11 +58,13 @@ function mapIntents({ intents, reactor }) {
 }
 
 function wrapIntent({ intent, name, reactor }) {
+	const evaluate = reactor.evaluate.bind(reactor)
+
 	return function getAndDispatchActions(payload) {
 		log(...[`Intent called: ${name}.`]
 			.concat(payload ? ['Payload:', payload] : []))
 
-		var result = intent(payload)
+		var result = intent(payload, evaluate)
 
 		invariant(
 			typeof result.subscribe === 'function',
