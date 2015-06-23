@@ -26,102 +26,107 @@ const Fluxium = {
 
 		const reactor = new Reactor()
 
-		function mapIntents(intentGroup) {
-			return _.mapValues(intentGroup, (value, key) => {
-				invariant(
-					typeof value === 'function' || _.isPlainObject(value),
-					ignoreNewlines `Children of the 'intents' attribute must be either a
-						function or a plain JS object. You provided a child at %s with a
-						type of %s`,
-					value,
-					typeof value
-				)
-
-				if (typeof value === 'function') {
-					return wrapIntent(value, key)
-				}
-				else if (_.isPlainObject(value)) {
-					return mapIntents(value)
-				}
-			})
-		}
-
-		function dispatch(actionType, payload) {
-			invariant(
-				typeof actionType === 'string' && actionType.length,
-				'Action types dispatched must be non-empty strings. You provided: %s',
-				actionType
-			)
-
-			invariant(
-				payload === undefined || _.isPlainObject(payload),
-				'Action payloads must be plain JS objects. You provided: %s',
-				payload
-			)
-
-			log(...[`Dispatching ${actionType}.`]
-				.concat(payload ? ['Payload:', payload] : []))
-			reactor.dispatch(actionType, payload)
-		}
-
-		function wrapIntent(intent, name) {
-			return function getAndDispatchActions(payload) {
-				log(...[`Intent called: ${name}.`]
-					.concat(payload ? ['Payload:', payload] : []))
-
-				var result = intent(payload)
-
-				invariant(
-					typeof result.subscribe === 'function',
-					'Intents must return Rx.Observables of actions. You returned: $s',
-					result
-				)
-
-				result.subscribe(
-					action => {
-						invariant(
-							_.every(Object.keys(action), key =>
-								_.includes(['type', 'payload'], key)),
-							ignoreNewlines `The only valid attributes on an action are 'type'
-								and 'payload'. You provided: %s.`,
-							JSON.stringify(Object.keys(action))
-						)
-
-						invariant(
-							typeof action.type === 'string' && action.type.length,
-							'Action types must be non-empty strings. You provided: %s.',
-							action.type
-						)
-
-						invariant(
-							action.payload === undefined || _.isPlainObject(action.payload),
-							ignoreNewlines `Action payloads must be undefined or plain JS
-								objects. You provided: %s.`,
-							action.payload
-						)
-
-						dispatch(action.type, action.payload)
-					},
-					error => {
-						var errorEvent = handleError(error)
-
-						if (errorEvent) {
-							dispatch(errorEvent.type, errorEvent.payload)
-						}
-					}
-				)
-			}
-		}
-
 		reactor.registerStores(getStores(stores))
 
 		return {
 			mixin: reactor.ReactMixin,
-			intents: mapIntents(intents),
+			intents: mapIntents({ intents, reactor }),
 			observe: reactor.observe.bind(reactor),
 			evaluate: reactor.evaluate.bind(reactor)
 		}
 	}
+}
+
+function mapIntents({ intents, reactor }) {
+	return _.mapValues(intents, (value, key) => {
+		invariant(
+			typeof value === 'function' || _.isPlainObject(value),
+			ignoreNewlines `Children of the 'intents' attribute must be either a
+				function or a plain JS object. You provided a child at %s with a
+				type of %s`,
+			value,
+			typeof value
+		)
+
+		if (typeof value === 'function') {
+			return wrapIntent({ reactor, intent: value, name: key })
+		}
+		else if (_.isPlainObject(value)) {
+			return mapIntents({ reactor, intents: value })
+		}
+	})
+}
+
+function wrapIntent({ intent, name, reactor }) {
+	return function getAndDispatchActions(payload) {
+		log(...[`Intent called: ${name}.`]
+			.concat(payload ? ['Payload:', payload] : []))
+
+		var result = intent(payload)
+
+		invariant(
+			typeof result.subscribe === 'function',
+			'Intents must return Rx.Observables of actions. You returned: $s',
+			result
+		)
+
+		result.subscribe(
+			action => {
+				const actionKeys = Object.keys(action)
+				const { type, payload } = action
+
+				invariant(
+					_.every(actionKeys, key => _.includes(['type', 'payload'], key)),
+					ignoreNewlines `The only valid attributes on an action are 'type'
+						and 'payload'. You provided: %s.`,
+					JSON.stringify(Object.keys(action))
+				)
+
+				invariant(
+					typeof action.type === 'string' && action.type.length,
+					'Action types must be non-empty strings. You provided: %s.',
+					action.type
+				)
+
+				invariant(
+					action.payload === undefined || _.isPlainObject(action.payload),
+					ignoreNewlines `Action payloads must be undefined or plain JS
+					objects. You provided: %s.`,
+					action.payload
+				)
+
+				dispatch({ reactor, type, payload })
+			},
+			error => {
+				const errorEvent = handleError(error)
+
+				if (errorEvent) {
+					const { type, payload } = errorEvent
+
+					dispatch({ reactor, type, payload })
+				}
+			}
+		)
+	}
+}
+
+function dispatch({ reactor, type, payload }) {
+	invariant(
+		typeof type === 'string' && type.length,
+		'Action types dispatched must be non-empty strings. You provided: %s',
+		type
+	)
+
+	invariant(
+		payload === undefined || _.isPlainObject(payload),
+		'Action payloads must be plain JS objects. You provided: %s',
+		payload
+	)
+
+	log(...[`Dispatching ${type}.`]
+		.concat(payload ? ['Payload:', payload] : []))
+
+	reactor.dispatch(type, payload)
 }
 
 function getStores(stores) {
