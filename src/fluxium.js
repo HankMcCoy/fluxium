@@ -28,7 +28,8 @@ const Fluxium = {
 			mixin: reactor.ReactMixin,
 			intents: mapIntents({ intents, reactor, handleError }),
 			observe: reactor.observe.bind(reactor),
-			evaluate: reactor.evaluate.bind(reactor)
+			evaluate: reactor.evaluate.bind(reactor),
+			getDebugState: () => reactor.__state.toJS()
 		}
 	}
 }
