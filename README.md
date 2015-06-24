@@ -14,8 +14,8 @@ Here is a deliberately simplistic example, showing how to use Fluxium.
 ```js
 var fluxium = require('fluxium');
 var React = require('react');
+var Observable = require('rx').Observable;
 var Immutable = fluxium.Immutable;
-var Observable = fluxium.Rx.Observable;
 
 var flux = fluxium.create({
 	intents: {
