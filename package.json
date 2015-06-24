@@ -22,11 +22,13 @@
     "invariant": "^2.1.0",
     "lodash": "^3.9.3",
     "nuclear-js": "^1.0.5",
-    "rx": "^2.5.3",
     "ignore-newlines": "^0.0.x"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0"
+  },
+  "peerDependencies": {
+    "rx": "^2.5.3"
   }
 }

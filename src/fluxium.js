@@ -1,14 +1,10 @@
 import invariant from 'invariant'
 import _ from 'lodash'
 import { Reactor, Store, Immutable } from 'nuclear-js'
-import Rx from 'rx'
 import ignoreNewlines from 'ignore-newlines'
-
-const { Observable } = Rx
 
 const Fluxium = {
 	Immutable,
-	Rx,
 	create({ intents, stores, handleError }) {
 		invariant(
 			handleError === undefined || typeof handleError === 'function',
@@ -30,14 +26,14 @@ const Fluxium = {
 
 		return {
 			mixin: reactor.ReactMixin,
-			intents: mapIntents({ intents, reactor }),
+			intents: mapIntents({ intents, reactor, handleError }),
 			observe: reactor.observe.bind(reactor),
 			evaluate: reactor.evaluate.bind(reactor)
 		}
 	}
 }
 
-function mapIntents({ intents, reactor }) {
+function mapIntents({ intents, reactor, handleError }) {
 	return _.mapValues(intents, (value, key) => {
 		invariant(
 			typeof value === 'function' || _.isPlainObject(value),
@@ -49,15 +45,15 @@ function mapIntents({ intents, reactor }) {
 		)
 
 		if (typeof value === 'function') {
-			return wrapIntent({ reactor, intent: value, name: key })
+			return wrapIntent({ reactor, handleError, intent: value, name: key })
 		}
 		else if (_.isPlainObject(value)) {
-			return mapIntents({ reactor, intents: value })
+			return mapIntents({ reactor, handleError, intents: value })
 		}
 	})
 }
 
-function wrapIntent({ intent, name, reactor }) {
+function wrapIntent({ intent, name, reactor, handleError }) {
 	const evaluate = reactor.evaluate.bind(reactor)
 
 	return function getAndDispatchActions(payload) {
