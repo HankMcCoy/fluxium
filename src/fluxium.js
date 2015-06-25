@@ -90,7 +90,7 @@ function wrapIntent({ intent, name, reactor, handleError }) {
 				invariant(
 					action.payload === undefined || _.isPlainObject(action.payload),
 					ignoreNewlines `Action payloads must be undefined or plain JS
-					objects. You provided: %s.`,
+						objects. You provided: %s.`,
 					action.payload
 				)
 

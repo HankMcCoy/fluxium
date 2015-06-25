@@ -1,0 +1,98 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/Users/thomas/.nvm/v0.10.28/bin/npm', 'publish' ]
+2 info using npm@2.11.3
+3 info using node@v0.10.28
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec { raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/thomas/code/fluxium',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/thomas/.npm/fluxium/0.0.7/package.tgz not in flight; packing
+9 verbose tar pack [ '/Users/thomas/.npm/fluxium/0.0.7/package.tgz',
+9 verbose tar pack   '/Users/thomas/code/fluxium' ]
+10 verbose tarball /Users/thomas/.npm/fluxium/0.0.7/package.tgz
+11 verbose folder /Users/thomas/code/fluxium
+12 info prepublish fluxium@0.0.7
+13 verbose addLocalTarball adding from inside cache /Users/thomas/.npm/fluxium/0.0.7/package.tgz
+14 silly cache afterAdd fluxium@0.0.7
+15 verbose afterAdd /Users/thomas/.npm/fluxium/0.0.7/package/package.json not in flight; writing
+16 verbose afterAdd /Users/thomas/.npm/fluxium/0.0.7/package/package.json written
+17 silly publish { name: 'fluxium',
+17 silly publish   version: '0.0.7',
+17 silly publish   description: 'A small wrapper around Nuclear JS, Fluxium allows you to write your intents and stores as plain JS objects. Action creators are replaced by \'intents\' which return observable streams of actions instead of directly dispatching them.',
+17 silly publish   main: 'lib/fluxium.js',
+17 silly publish   repository:
+17 silly publish    { type: 'git',
+17 silly publish      url: 'git+https://github.com/hankmccoy/fluxium.git' },
+17 silly publish   keywords: [ 'flux', 'nuclear', 'react' ],
+17 silly publish   author: { name: 'Thomas Beirne' },
+17 silly publish   license: 'ISC',
+17 silly publish   bugs: { url: 'https://github.com/hankmccoy/fluxium/issues' },
+17 silly publish   homepage: 'https://github.com/hankmccoy/fluxium',
+17 silly publish   dependencies:
+17 silly publish    { invariant: '^2.1.0',
+17 silly publish      lodash: '^3.9.3',
+17 silly publish      'nuclear-js': '^1.0.5',
+17 silly publish      'ignore-newlines': '^0.0.x' },
+17 silly publish   devDependencies: { gulp: '^3.9.0', 'gulp-babel': '^5.1.0' },
+17 silly publish   peerDependencies: { rx: '^2.5.3' },
+17 silly publish   readme: 'Fluxium\n=======\n\nSummary\n-------\n\nA small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. The action creators of Flux, which traditionally dispatch actions via a central dispatch method, are replaced with intents which return observable streams of actions which Fluxium takes care of dispatching.\n\nExample\n-------\n\nHere is a deliberately simplistic example, showing how to use Fluxium.\n\n```js\nvar fluxium = require(\'fluxium\');\nvar React = require(\'react\');\nvar Observable = require(\'rx\').Observable;\nvar Immutable = fluxium.Immutable;\n\nvar flux = fluxium.create({\n\tintents: {\n\t\tshowAlert: function(message) {\n\t\t\treturn Observable.just({\n\t\t\t\ttype: \'SHOW_ALERT\',\n\t\t\t\tpayload: { message: message }\n\t\t\t})\n\t\t},\n\t\tdismissAlert: function () {\n\t\t\treturn Observable.just({\n\t\t\t\ttype: \'DISMISS_ALERT\'\n\t\t\t})\n\t\t}\n\t},\n\tstores: {\n\t\talert: {\n\t\t\tinitialState: Immutable.Map({\n\t\t\t\tmessage: undefined\n\t\t\t}),\n\t\t\thandlers: {\n\t\t\t\tSHOW_ALERT: function (state, payload) {\n\t\t\t\t\treturn state.set(\'message\', payload.message)\n\t\t\t\t},\n\t\t\t\tDISMISS_ALERT: function (state) {\n\t\t\t\t\treturn state.set(\'message\', undefined)\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\thandleError: function (error) {\n\t\tconsole.error(JSON.stringify(error))\n\t}\n});\n\nvar getters = {\n\tmessage: [\'alert\', \'message\']\n};\n\nvar Alert = React.createClass({\n\tmixins: [flux.mixin],\n\tgetDataBindings: function () {\n\t\tmessage: getters.message\n\t},\n\trender: function () {\n\t\tvar message = this.state.message\n\n\t\tif (message) {\n\t\t\t<div>\n\t\t\t\t<p>{this.state.message}</p>\n\t\t\t\t<button onClick={dismissAlert}>x</button>\n\t\t\t</div>\n\t\t}\n\t\telse {\n\t\t\t<div>No message</div>\n\t\t}\n\t},\n\tdismissAlert: function () {\n\t\tflux.intents.dismissAlert()\n\t}\n})\n```\n',
+17 silly publish   readmeFilename: 'README.md',
+17 silly publish   gitHead: 'ca575676f756f7f5b6a1c5cfd7cd048b0a7591e0',
+17 silly publish   _id: 'fluxium@0.0.7',
+17 silly publish   scripts: {},
+17 silly publish   _shasum: '912b9c53e2e0ccafdbcab693c7215ae9ce819b47',
+17 silly publish   _from: '.' }
+18 verbose getPublishConfig undefined
+19 silly mapToRegistry name fluxium
+20 silly mapToRegistry using default registry
+21 silly mapToRegistry registry https://registry.npmjs.org/
+22 silly mapToRegistry uri https://registry.npmjs.org/fluxium
+23 verbose publish registryBase https://registry.npmjs.org/
+24 silly publish uploading /Users/thomas/.npm/fluxium/0.0.7/package.tgz
+25 verbose request uri https://registry.npmjs.org/fluxium
+26 verbose request sending authorization for write operation
+27 info attempt registry request try #1 at 12:01:52
+28 verbose request id f36655bd09514683
+29 http request PUT https://registry.npmjs.org/fluxium
+30 http 403 https://registry.npmjs.org/fluxium
+31 verbose headers { 'content-type': 'application/json',
+31 verbose headers   'cache-control': 'max-age=60',
+31 verbose headers   'content-length': '95',
+31 verbose headers   'accept-ranges': 'bytes',
+31 verbose headers   date: 'Thu, 25 Jun 2015 19:01:52 GMT',
+31 verbose headers   via: '1.1 varnish',
+31 verbose headers   connection: 'keep-alive',
+31 verbose headers   'x-served-by': 'cache-atl6232-ATL',
+31 verbose headers   'x-cache': 'MISS',
+31 verbose headers   'x-cache-hits': '0',
+31 verbose headers   'x-timer': 'S1435258911.888795,VS0,VE1064' }
+32 verbose request invalidating /Users/thomas/.npm/registry.npmjs.org/fluxium on PUT
+33 error publish Failed PUT 403
+34 verbose stack Error: "You cannot publish over the previously published version 0.0.7." : fluxium
+34 verbose stack     at CachingRegistryClient.<anonymous> (/Users/thomas/.nvm/v0.10.28/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:247:14)
+34 verbose stack     at Request._callback (/Users/thomas/.nvm/v0.10.28/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:170:14)
+34 verbose stack     at Request.self.callback (/Users/thomas/.nvm/v0.10.28/lib/node_modules/npm/node_modules/request/request.js:354:22)
+34 verbose stack     at Request.EventEmitter.emit (events.js:98:17)
+34 verbose stack     at Request.<anonymous> (/Users/thomas/.nvm/v0.10.28/lib/node_modules/npm/node_modules/request/request.js:1207:14)
+34 verbose stack     at Request.EventEmitter.emit (events.js:117:20)
+34 verbose stack     at IncomingMessage.<anonymous> (/Users/thomas/.nvm/v0.10.28/lib/node_modules/npm/node_modules/request/request.js:1153:12)
+34 verbose stack     at IncomingMessage.EventEmitter.emit (events.js:117:20)
+34 verbose stack     at _stream_readable.js:919:16
+34 verbose stack     at process._tickCallback (node.js:419:13)
+35 verbose statusCode 403
+36 verbose pkgid fluxium
+37 verbose cwd /Users/thomas/code/fluxium
+38 error Darwin 14.3.0
+39 error argv "node" "/Users/thomas/.nvm/v0.10.28/bin/npm" "publish"
+40 error node v0.10.28
+41 error npm  v2.11.3
+42 error code E403
+43 error "You cannot publish over the previously published version 0.0.7." : fluxium
+44 error If you need help, you may report this error at:
+44 error     <https://github.com/npm/npm/issues>
+45 verbose exit [ 1, true ]

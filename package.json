@@ -1,7 +1,7 @@
 {
   "name": "fluxium",
-  "version": "0.0.7",
-  "description": "A small wrapper around Nuclear JS, Fluxium allows you to write your actions and stores as plain JS objects. Action creators do not directly dispatch actions, but instead return observable streams of actions.",
+  "version": "0.0.8",
+  "description": "A small wrapper around Nuclear JS, Fluxium allows you to write your intents and stores as plain JS objects. Action creators are replaced by 'intents' which return observable streams of actions instead of directly dispatching them.",
   "main": "lib/fluxium.js",
   "repository": {
     "type": "git",
