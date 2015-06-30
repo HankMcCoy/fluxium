@@ -43,7 +43,6 @@ function wrapIntent({ intent, name, reactor, handleError }) {
 
 		result
 			.filter(action => !!action)
-			.subscribeOn(Rx.Scheduler.timeout)
 			.subscribe(
 				action => {
 					const actionKeys = Object.keys(action)
