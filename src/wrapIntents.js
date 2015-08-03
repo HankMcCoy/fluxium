@@ -4,6 +4,7 @@ import mapValues from 'lodash/object/mapValues'
 import isPlainObject from 'lodash/lang/isPlainObject'
 import every from 'lodash/collection/every'
 import includes from 'lodash/collection/includes'
+import makeObservable from './util'
 import log from './log'
 
 export default function wrapIntents({ intents, reactor, handleError }) {
@@ -33,7 +34,7 @@ function wrapIntent({ intent, name, reactor, handleError }) {
 		log(...[`Intent called: ${name}.`]
 			.concat(payload ? ['Payload:', payload] : []))
 
-		var result = intent(payload, evaluate)
+		var result = makeObservable(intent(payload, evaluate))
 
 		invariant(
 			typeof result.subscribe === 'function',
@@ -101,5 +102,3 @@ function dispatch({ reactor, type, payload }) {
 
 	reactor.dispatch(type, payload)
 }
-
-
