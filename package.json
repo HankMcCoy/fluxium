@@ -21,7 +21,7 @@
   "dependencies": {
     "invariant": "^2.1.0",
     "lodash": "^3.9.3",
-    "nuclear-js": "^1.0.5",
+    "nuclear-js": "1.1.x",
     "ignore-newlines": "^0.0.x"
   },
   "devDependencies": {
