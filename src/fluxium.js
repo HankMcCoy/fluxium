@@ -31,7 +31,7 @@ const Fluxium = {
 			intents: wrapIntents({ intents, reactor, handleError }),
 			observe: reactor.observe.bind(reactor),
 			evaluate: reactor.evaluate.bind(reactor),
-			getDebugState: () => reactor.__state.toJS()
+			getDebugState: () => reactor.state.toJS()
 		}
 	}
 }
