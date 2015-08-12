@@ -1,6 +1,6 @@
 {
   "name": "fluxium",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A moderately reactive Flux implementation wrapped around Nuclear JS.",
   "main": "lib/fluxium.js",
   "repository": {
