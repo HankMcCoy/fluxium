@@ -4,9 +4,11 @@ import { Reactor, Immutable } from 'nuclear-js'
 import ignoreNewlines from 'ignore-newlines'
 import wrapIntents from './wrapIntents'
 import wrapStores from './wrapStores'
+import evaluate from './evaluate'
 
 const Fluxium = {
 	Immutable,
+	evaluate,
 	create({ intents, stores, handleError }) {
 		invariant(
 			handleError === undefined || typeof handleError === 'function',
@@ -33,7 +35,7 @@ const Fluxium = {
 			evaluate: reactor.evaluate.bind(reactor),
 			getDebugState: () => reactor.state.toJS()
 		}
-	}
+	},
 }
 
 export default Fluxium
